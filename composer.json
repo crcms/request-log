@@ -1,0 +1,66 @@
+{
+  "name": "crcms/request-logger",
+  "description": "Laravel request logger.",
+  "keywords": [
+    "request-logger",
+    "request",
+    "logger",
+    "laravel"
+  ],
+  "authors": [
+    {
+      "name": "simon",
+      "email": "simon@crcms.cn"
+    }
+  ],
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": "^7.2.4",
+    "crcms/logger": "^0.0.1",
+    "illuminate/contracts": "^5.7",
+    "illuminate/http": "^5.7",
+    "illuminate/log": "^5.7",
+    "illuminate/support": "^5.7"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^4.1",
+    "codedungeon/phpunit-result-printer": "^0.26.0",
+    "php-coveralls/php-coveralls": "^2.1",
+    "phpunit/php-code-coverage": "^6.0",
+    "mockery/mockery": "^1.2",
+    "phpunit/phpunit": "^7.5"
+  },
+  "autoload": {
+    "classmap": [
+    ],
+    "psr-4": {
+      "CrCms\\Request\\Logger\\": "src/"
+    },
+    "files": [
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "CrCms\\Request\\Logger\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+      ],
+      "aliases": {
+      }
+    }
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true,
+    "platform": {
+      "php": "7.2.4"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
