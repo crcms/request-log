@@ -17,8 +17,7 @@ class RequestLogger extends MongoDBLogger
      */
     public function __invoke(array $config): MongoLogger
     {
-        $handler = $config['default'] === 'file' ? $this->fileHandler($config['channels']['file']) : null;//$this->mongoHandler($config['channels']['mongo']);
-        $handler->setFormatter(new LineFormatter());
+        $handler = $config['default'] === 'file' ? $this->fileHandler($config['channels']['file']) : $this->mongoHandler($config['channels']['mongo']);
         return new MongoLogger($this->parseChannel($config),[$handler]);
     }
 
@@ -30,7 +29,8 @@ class RequestLogger extends MongoDBLogger
      */
     protected function fileHandler(array $config): RotatingFileHandler
     {
-        return new RotatingFileHandler($config['path'], $config['days'] ?? 7, $this->level($config),
+        $handler = new RotatingFileHandler($config['path'], $config['days'] ?? 7, $this->level($config),
             $config['bubble'] ?? true, $config['permission'] ?? null, $config['locking'] ?? false);
+        return $handler->setFormatter(new LineFormatter());
     }
 }
