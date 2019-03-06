@@ -5,7 +5,7 @@ namespace CrCms\Request\Logger\Contracts;
 interface FormatterContract
 {
     /**
-     * messageFormat
+     * messageFormat.
      *
      * @return string
      */

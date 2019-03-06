@@ -11,9 +11,9 @@
 
 namespace CrCms\Request\Logger;
 
+use Illuminate\Support\ServiceProvider;
 use CrCms\Request\Logger\Contracts\FormatterContract;
 use CrCms\Request\Logger\Formatter\AbstractFormatter;
-use Illuminate\Support\ServiceProvider;
 
 class RequestLoggerServiceProvider extends ServiceProvider
 {
@@ -33,7 +33,7 @@ class RequestLoggerServiceProvider extends ServiceProvider
     protected $packagePath = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR;
 
     /**
-     * Boot
+     * Boot.
      *
      * @return void
      */
@@ -45,7 +45,7 @@ class RequestLoggerServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register
+     * Register.
      *
      * @return void
      */
@@ -59,7 +59,7 @@ class RequestLoggerServiceProvider extends ServiceProvider
     }
 
     /**
-     * registerAlias
+     * registerAlias.
      *
      * @return void
      */
@@ -71,7 +71,7 @@ class RequestLoggerServiceProvider extends ServiceProvider
     }
 
     /**
-     * registerServices
+     * registerServices.
      *
      * @return void
      */
@@ -83,12 +83,13 @@ class RequestLoggerServiceProvider extends ServiceProvider
 
         $this->app->singleton('request.formatter', function ($app) {
             $formatter = $app['config']['request_logger']['formatter'];
+
             return new $formatter($app, $app['config']['request_logger']['message']);
         });
     }
 
     /**
-     * Providers
+     * Providers.
      *
      * @return array
      */

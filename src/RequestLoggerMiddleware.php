@@ -12,8 +12,8 @@
 namespace CrCms\Request\Logger;
 
 use Closure;
-use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Container\Container;
 use Symfony\Component\HttpFoundation\Response;
 
 class RequestLoggerMiddleware
@@ -32,7 +32,7 @@ class RequestLoggerMiddleware
     }
 
     /**
-     * middleware handle
+     * middleware handle.
      *
      * @param Request $request
      * @param Closure $next
@@ -50,7 +50,7 @@ class RequestLoggerMiddleware
     }
 
     /**
-     * Record request log
+     * Record request log.
      *
      * @param Request $request
      * @param Response $response
@@ -62,7 +62,7 @@ class RequestLoggerMiddleware
         $message = $formatter->setInstances([
             'request' => $request,
             'response' => $response,
-            'auth' => $this->app['auth']
+            'auth' => $this->app['auth'],
         ])->message();
 
         $status = $response->getStatusCode();
