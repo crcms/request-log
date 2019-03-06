@@ -17,7 +17,7 @@
   "license": "MIT",
   "require": {
     "php": "^7.2.4",
-    "crcms/logger": "dev-master",
+    "crcms/logger": "^0.1.0",
     "illuminate/contracts": "^5.7",
     "illuminate/http": "^5.7",
     "illuminate/log": "^5.7",
