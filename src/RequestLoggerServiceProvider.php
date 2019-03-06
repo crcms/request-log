@@ -40,7 +40,7 @@ class RequestLoggerServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            $this->packagePath.'config/config.php' => $this->namespace.'.php',
+            $this->packagePath.'config/config.php' => $this->app->configPath($this->namespace.'.php'),
         ]);
     }
 
