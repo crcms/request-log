@@ -3,14 +3,14 @@
 namespace CrCms\Request\Logger;
 
 use CrCms\Log\MongoDBLogger;
+use Monolog\Logger as MongoLogger;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
-use Monolog\Logger as MongoLogger;
 
 class RequestLogger extends MongoDBLogger
 {
     /**
-     * Function
+     * Function.
      *
      * @param array $config
      * @return MongoLogger
@@ -18,11 +18,12 @@ class RequestLogger extends MongoDBLogger
     public function __invoke(array $config): MongoLogger
     {
         $handler = $config['default'] === 'file' ? $this->fileHandler($config['channels']['file']) : $this->mongoHandler($config['channels']['mongo']);
-        return new MongoLogger($this->parseChannel($config),[$handler]);
+
+        return new MongoLogger($this->parseChannel($config), [$handler]);
     }
 
     /**
-     * fileLogger
+     * fileLogger.
      *
      * @param array $config
      * @return RotatingFileHandler
@@ -31,6 +32,7 @@ class RequestLogger extends MongoDBLogger
     {
         $handler = new RotatingFileHandler($config['path'], $config['days'] ?? 7, $this->level($config),
             $config['bubble'] ?? true, $config['permission'] ?? null, $config['locking'] ?? false);
+
         return $handler->setFormatter(new LineFormatter());
     }
 }

@@ -2,13 +2,12 @@
 
 namespace CrCms\Request\Logger\Formatter;
 
-use CrCms\Request\Logger\Contracts\FormatterContract;
-use Illuminate\Auth\AuthManager;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Container\Container;
-use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\Request;
+use Illuminate\Auth\AuthManager;
+use Illuminate\Database\DatabaseManager;
+use Illuminate\Contracts\Container\Container;
 use Symfony\Component\HttpFoundation\Response;
+use CrCms\Request\Logger\Contracts\FormatterContract;
 
 class LaravelFormatter extends AbstractFormatter implements FormatterContract
 {
@@ -33,7 +32,7 @@ class LaravelFormatter extends AbstractFormatter implements FormatterContract
     }
 
     /**
-     * setResponse
+     * setResponse.
      *
      * @param Response $response
      * @return self
@@ -41,11 +40,12 @@ class LaravelFormatter extends AbstractFormatter implements FormatterContract
     public function setInstances(array $instances): self
     {
         $this->instances = $instances;
+
         return $this;
     }
 
     /**
-     * keywords
+     * keywords.
      *
      * @param Request $request
      * @return array
@@ -77,6 +77,7 @@ class LaravelFormatter extends AbstractFormatter implements FormatterContract
                 'route' => function ($request) {
                     /* @var Request $request */
                     $route = $request->route();
+
                     return is_null($route) ? '' : $route->getName();
                 },
             ],
@@ -94,6 +95,7 @@ class LaravelFormatter extends AbstractFormatter implements FormatterContract
                     } else {
                         return -1;
                     }
+
                     return microtime(true) - $start;
                 },
             ],
@@ -107,13 +109,13 @@ class LaravelFormatter extends AbstractFormatter implements FormatterContract
             'db' => [
                 'db_count' => function (DatabaseManager $db) {
                     count($db->getQueryLog());
-                }
-            ]
+                },
+            ],
         ];
     }
 
     /**
-     * instances
+     * instances.
      *
      * @return array
      */

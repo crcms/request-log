@@ -20,7 +20,7 @@ abstract class AbstractFormatter implements FormatterContract
     }
 
     /**
-     * messageFormat
+     * messageFormat.
      *
      * @param string $message
      * @return string
@@ -31,7 +31,6 @@ abstract class AbstractFormatter implements FormatterContract
         $instances = $this->instances();
 
         return preg_replace_callback('/\{(\w+)\}/', function ($keyword) use ($keywords, $instances) {
-
             foreach ($keywords as $key => $value) {
                 if (isset($value[$keyword[1]])) {
                     return call_user_func($value[$keyword[1]], $instances[$key]);
@@ -43,14 +42,14 @@ abstract class AbstractFormatter implements FormatterContract
     }
 
     /**
-     * keywords
+     * keywords.
      *
      * @return array
      */
     abstract protected function keywords(): array;
 
     /**
-     * instances
+     * instances.
      *
      * @return array
      */
