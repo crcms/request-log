@@ -51,6 +51,7 @@
   "extra": {
     "laravel": {
       "providers": [
+        "CrCms\\Request\\Logger\\RequestLoggerServiceProvider"
       ],
       "aliases": {
       }
