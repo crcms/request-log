@@ -3,6 +3,7 @@
 namespace CrCms\Request\Logger\Formatter;
 
 use CrCms\Request\Logger\Contracts\FormatterContract;
+use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Database\DatabaseManager;
@@ -98,8 +99,8 @@ class LaravelFormatter extends AbstractFormatter implements FormatterContract
             ],
 
             'auth' => [
-                'user' => function (Authenticatable $auth = null) {
-                    return $auth ? $auth->getAuthIdentifierName()[$auth->getAuthIdentifier()] : '';
+                'user' => function (AuthManager $auth = null) {
+                    return $auth ? $auth->id() : -1;
                 },
             ],
 
