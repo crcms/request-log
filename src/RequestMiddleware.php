@@ -18,24 +18,36 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RequestMiddleware
 {
+    /**
+     * @var Container
+     */
     protected $app;
 
+    /**
+     * @param Container $container
+     */
     public function __construct(Container $container)
     {
         $this->app = $container;
     }
 
     /**
+     * middleware handle
      *
-     *
-     * @param $request
+     * @param Request $request
      * @param Closure $next
      * @return mixed
      */
-    /*public function handle($request, Closure $next)
+    public function handle($request, Closure $next)
     {
+        define('REQUEST_START', microtime(true));
+
+        if ($this->app['config']['request_logger']['enable_sql_log']) {
+            $this->app['db']->enableQueryLog();
+        }
+
         return $next($request);
-    }*/
+    }
 
     /**
      * Record request log
@@ -46,6 +58,24 @@ class RequestMiddleware
      */
     public function terminate($request, $response)
     {
+        $formatter = $this->app['request.formatter'];
+        $message = $formatter->setInstances([
+            'request' => $request,
+            'response' => $response,
+            'auth' => $this->app['auth']
+        ])->message();
 
+        $status = $response->getStatusCode();
+        $requestLogger = $this->app['request.logger']($this->app['config']['request_logger']);
+
+        if ($status >= 500) {
+            $requestLogger->error($message, []);
+        } elseif ($status >= 400) {
+            $requestLogger->warning($message, []);
+        } else {
+            $requestLogger->info($message, []);
+        }
+
+        $this->app['db']->disableQueryLog();
     }
 }

@@ -1,37 +1,36 @@
 <?php
 
-/**
- * @author simon <crcms@crcms.cn>
- * @datetime 2019-03-03 22:19
- *
- * @link http://crcms.cn/
- *
- * @copyright Copyright &copy; 2019 Rights Reserved CRCMS
- */
-
 namespace CrCms\Request\Logger;
 
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Response;
+use CrCms\Log\MongoDBLogger;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Logger as MongoLogger;
 
-class RequestLogger
+class RequestLogger extends MongoDBLogger
 {
-    protected $logger;
-
-    public function __construct(LoggerInterface $logger)
+    /**
+     * Function
+     *
+     * @param array $config
+     * @return MongoLogger
+     */
+    public function __invoke(array $config): MongoLogger
     {
-        $this->logger = $logger;
+        $handler = $config['default'] === 'file' ? $this->fileHandler($config['channels']['file']) : null;//$this->mongoHandler($config['channels']['mongo']);
+        $handler->setFormatter(new LineFormatter());
+        return new MongoLogger($this->parseChannel($config),[$handler]);
     }
 
     /**
+     * fileLogger
      *
-     *
-     * @param $request
-     * @param Response $response
-     * @return void
+     * @param array $config
+     * @return RotatingFileHandler
      */
-    public function handle($request, $response)
+    protected function fileHandler(array $config): RotatingFileHandler
     {
-        //if ($response)
+        return new RotatingFileHandler($config['path'], $config['days'] ?? 7, $this->level($config),
+            $config['bubble'] ?? true, $config['permission'] ?? null, $config['locking'] ?? false);
     }
 }

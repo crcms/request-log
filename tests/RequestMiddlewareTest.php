@@ -11,23 +11,55 @@
 
 namespace CrCms\Request\Logger\Tests;
 
+use CrCms\Request\Logger\RequestLoggerServiceProvider;
 use CrCms\Request\Logger\RequestMiddleware;
-use Illuminate\Container\Container;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class RequestMiddlewareTest
+class RequestMiddlewareTest extends TestCase
 {
+    use ApplicationTrait;
 
-    public function testTerminate()
+    public function testMiddlewareFile()
     {
+        static::$app->singleton('db',function(){
+            $db = \Mockery::mock(DatabaseManager::class);
+            $db->shouldReceive('getQueryLog')->andReturn([]);
+            $db->shouldReceive('enableQueryLog');
+            $db->shouldReceive('disableQueryLog');
+            return $db;
+        });
+        static::$app->singleton('auth',function(){
+            $auth = \Mockery::mock(Authenticatable::class);
+            $auth->shouldReceive('getAuthIdentifierName')->andReturn('name');
+            $auth->shouldReceive('getAuthIdentifier')->andReturn(1);
+            return $auth;
+        });
 
-        $container = new Container();
+        $provider = new RequestLoggerServiceProvider(static::$app);
 
-        $middleware = new RequestMiddleware($container);
+        $provider->register();
+        $provider->boot();
 
-        $middleware->terminate(Request::capture(), new Response('abc', 200));
+        $middleware = new RequestMiddleware(static::$app);
 
+        $request = Request::capture();
+
+        $filename = pathinfo(static::$app['config']['request_logger']['channels']['file']['path'],PATHINFO_FILENAME);
+        $filename = $filename.'-'.date('Y-m-d').'.log';
+        $file = pathinfo(static::$app['config']['request_logger']['channels']['file']['path'],PATHINFO_DIRNAME).'/'.$filename;
+        @unlink($file);
+
+        $response = $middleware->handle($request,function(){
+            return new Response('abc');
+        });
+
+        $middleware->terminate($request, $response);
+
+        $this->assertEquals(true,file_exists($file));
     }
 
 }

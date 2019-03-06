@@ -17,19 +17,21 @@
   "license": "MIT",
   "require": {
     "php": "^7.2.4",
-    "crcms/logger": "^0.0.1",
+    "crcms/logger": "dev-master",
     "illuminate/contracts": "^5.7",
     "illuminate/http": "^5.7",
     "illuminate/log": "^5.7",
+    "illuminate/config": "^5.7",
     "illuminate/support": "^5.7"
   },
   "require-dev": {
-    "symfony/var-dumper": "^4.1",
     "codedungeon/phpunit-result-printer": "^0.26.0",
+    "mockery/mockery": "^1.2",
     "php-coveralls/php-coveralls": "^2.1",
     "phpunit/php-code-coverage": "^6.0",
-    "mockery/mockery": "^1.2",
-    "phpunit/phpunit": "^7.5"
+    "phpunit/phpunit": "^7.5",
+    "symfony/var-dumper": "^4.1",
+    "vlucas/phpdotenv": "^3.3"
   },
   "autoload": {
     "classmap": [
@@ -41,6 +43,7 @@
     ]
   },
   "autoload-dev": {
+    "files": ["tests/bootstrap.php"],
     "psr-4": {
       "CrCms\\Request\\Logger\\Tests\\": "tests/"
     }

@@ -11,6 +11,8 @@
 
 namespace CrCms\Request\Logger;
 
+use CrCms\Request\Logger\Contracts\FormatterContract;
+use CrCms\Request\Logger\Formatter\AbstractFormatter;
 use Illuminate\Support\ServiceProvider;
 
 class RequestLoggerServiceProvider extends ServiceProvider
@@ -23,7 +25,7 @@ class RequestLoggerServiceProvider extends ServiceProvider
     /**
      * @var string
      */
-    protected $namespace = 'request-logger';
+    protected $namespace = 'request_logger';
 
     /**
      * @var string
@@ -51,11 +53,37 @@ class RequestLoggerServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom($this->packagePath.'config/config.php', $this->namespace);
 
+        $this->registerAlias();
+
+        $this->registerServices();
+    }
+
+    /**
+     * registerAlias
+     *
+     * @return void
+     */
+    protected function registerAlias(): void
+    {
         $this->app->alias('request.logger', RequestLogger::class);
+        $this->app->alias('request.formatter', FormatterContract::class);
+        $this->app->alias('request.formatter', AbstractFormatter::class);
+    }
+
+    /**
+     * registerServices
+     *
+     * @return void
+     */
+    protected function registerServices(): void
+    {
         $this->app->singleton('request.logger', function ($app) {
-            return new RequestLogger($this->app['log']->stack(
-                $this->app['config']->get('request-logger.default', 'file')
-            ));
+            return new RequestLogger($app['db'], $app['config']);
+        });
+
+        $this->app->singleton('request.formatter', function ($app) {
+            $formatter = $app['config']['request_logger']['formatter'];
+            return new $formatter($app, $app['config']['request_logger']['message']);
         });
     }
 
@@ -66,6 +94,12 @@ class RequestLoggerServiceProvider extends ServiceProvider
      */
     public function provides(): array
     {
-        return ['request.logger', RequestLogger::class];
+        return [
+            'request.logger',
+            'request.formatter',
+            RequestLogger::class,
+            FormatterContract::class,
+            AbstractFormatter::class,
+        ];
     }
 }
