@@ -109,8 +109,8 @@ class LaravelFormatter extends AbstractFormatter implements FormatterContract
             'db' => [
                 'db_count' => function (DatabaseManager $db) {
                     return count($db->getQueryLog());
-                }
-            ]
+                },
+            ],
         ];
     }
 

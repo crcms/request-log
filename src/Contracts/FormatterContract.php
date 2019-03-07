@@ -12,7 +12,7 @@ interface FormatterContract
     public function message(): string;
 
     /**
-     * context
+     * context.
      *
      * @return array
      */
