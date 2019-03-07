@@ -20,6 +20,9 @@ $app->singleton('config', function () use ($config) {
     ]);
 });
 
+$app = Mockery::mock($app);
+$app->shouldReceive('configPath')->andReturn(__DIR__);
+
 //$providers = [
 //    \Illuminate\Database\DatabaseServiceProvider::class,
 //    \Jenssegers\Mongodb\MongodbServiceProvider::class,

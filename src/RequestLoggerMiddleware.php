@@ -65,15 +65,17 @@ class RequestLoggerMiddleware
             'auth' => $this->app['auth'],
         ])->message();
 
+        $context = $formatter->context();
+
         $status = $response->getStatusCode();
         $requestLogger = $this->app['request.logger']($this->app['config']['request_logger']);
 
         if ($status >= 500) {
-            $requestLogger->error($message, []);
+            $requestLogger->error($message, $context);
         } elseif ($status >= 400) {
-            $requestLogger->warning($message, []);
+            $requestLogger->warning($message, $context);
         } else {
-            $requestLogger->info($message, []);
+            $requestLogger->info($message, $context);
         }
 
         $this->app['db']->disableQueryLog();

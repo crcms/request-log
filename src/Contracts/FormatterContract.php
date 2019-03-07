@@ -10,4 +10,11 @@ interface FormatterContract
      * @return string
      */
     public function message(): string;
+
+    /**
+     * context
+     *
+     * @return array
+     */
+    public function context(): array;
 }

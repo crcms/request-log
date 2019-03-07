@@ -3,6 +3,7 @@
 namespace CrCms\Request\Logger\Formatter;
 
 use CrCms\Request\Logger\Contracts\FormatterContract;
+use Illuminate\Support\Collection;
 
 abstract class AbstractFormatter implements FormatterContract
 {
@@ -42,7 +43,25 @@ abstract class AbstractFormatter implements FormatterContract
     }
 
     /**
-     * keywords.
+     * context
+     *
+     * @return array
+     */
+    public function context(): array
+    {
+        $keywords = $this->keywords();
+        $instances = $this->instances();
+
+        return Collection::make($keywords)->map(function ($item, $instanceKey) use ($instances) {
+            $instance = $instances[$instanceKey];
+            return Collection::make($item)->mapWithKeys(function ($value, $key) use($instance) {
+                return [$key=>call_user_func($value, $instance)];
+            });
+        })->collapse()->toArray();
+    }
+
+    /**
+     * keywords
      *
      * @return array
      */

@@ -11,13 +11,13 @@
 
 namespace CrCms\Request\Logger\Tests;
 
+use CrCms\Request\Logger\RequestLoggerMiddleware;
+use CrCms\Request\Logger\RequestLoggerServiceProvider;
+use Illuminate\Auth\AuthManager;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\TestCase;
-use Illuminate\Database\DatabaseManager;
-use CrCms\Request\Logger\RequestMiddleware;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Symfony\Component\HttpFoundation\Response;
-use CrCms\Request\Logger\RequestLoggerServiceProvider;
 
 class RequestMiddlewareTest extends TestCase
 {
@@ -33,11 +33,11 @@ class RequestMiddlewareTest extends TestCase
 
             return $db;
         });
-        static::$app->singleton('auth', function () {
-            $auth = \Mockery::mock(Authenticatable::class);
-            $auth->shouldReceive('getAuthIdentifierName')->andReturn('name');
-            $auth->shouldReceive('getAuthIdentifier')->andReturn(1);
-
+        static::$app->singleton('auth',function(){
+            $auth = \Mockery::mock(AuthManager::class);
+//            $auth->shouldReceive('getAuthIdentifierName')->andReturn('name');
+//            $auth->shouldReceive('getAuthIdentifier')->andReturn(1);
+            $auth->shouldReceive('id')->andReturn(1);
             return $auth;
         });
 
@@ -46,7 +46,7 @@ class RequestMiddlewareTest extends TestCase
         $provider->register();
         $provider->boot();
 
-        $middleware = new RequestMiddleware(static::$app);
+        $middleware = new RequestLoggerMiddleware(static::$app);
 
         $request = Request::capture();
 
